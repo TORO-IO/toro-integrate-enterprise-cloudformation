@@ -41,7 +41,7 @@ if [ ! "\$(swapon -s | grep -v Filename)" ];then
   mkswap \${SWAPFILE}
   swapon \${SWAPFILE}
 fi
-EOF
+EOFCREATE_SWAP
 
   cat > /tmp/swappiness.sh <<EOF
 #!/usr/bin/env bash
@@ -131,7 +131,6 @@ function GETDATA() {
   read -e -p "Please specify the /data directory of your TORO Integrate Instance: " DATA
   if [ ! -d "${DATA}" ];then
   echo "The path or Device you specified does not exist."
-  #read -p "Please specify the /data directory of your TORO Integrate Instance" DATA
   GETDATA
 fi
 }
@@ -140,7 +139,6 @@ function GETJDBC () {
     read -e -p "Please specify the /jdbc-pool directory of your TORO Integrate Instance: " JDBC
   if [ ! -d "${JDBC}" ];then
   echo "The path or Device you specified does not exist."
-  #read -p "Please specify the /jdbc-pool directory of your TORO Integrate Instance" JDBC
   GETJDBC
 fi
 }
@@ -149,7 +147,6 @@ function GETLOGS () {
     read -e -p "Please specify the /logs directory of your TORO Integrate Instance: " LOGS
   if [ ! -d "${LOGS}" ];then
   echo "The path or Device you specified does not exist."
-  #read -p "Please specify the /logs directory of your TORO Integrate Instance" LOGS
   GETLOGS
 fi
 }
@@ -158,7 +155,6 @@ function GETPACKAGES () {
   read -e -p "Please specify the /packages directory of your TORO Integrate Instance: " PACKAGES
    if [ ! -d "${PACKAGES}" ];then
   echo "The path or Device you specified does not exist."
-  #read -p "Please specify the /packages directory of your TORO Integrate Instance" PACKAGES
   GETPACKAGES
 fi
 }
@@ -166,6 +162,15 @@ fi
 function GETSYSTEMP () {
   read -e -p "Please specify the /system-temp directory of your TORO Integrate Instance.
   This is optional, you may leave this blank if there is none: " SYSTEMP
+}
+
+function GETCODE() {
+  read -e -p "Please specify the /code directory of your TORO Integrate Instance: " CODE
+  if [ ! -d "${CODE}" ];then
+  echo "The path or Device you specified does not exist."
+  GETCODE
+fi
+
 }
 
 function GETTEMP () {
@@ -535,6 +540,31 @@ function RUNRSYNCCOMMANDTEMP() {
   set -e
 }
 
+function RUNRSYNCCOMMANDCODE() {
+  set +e
+  MAX_RETRIES=${MAX_RETRIES:-5}
+  RETRY_COUNT=0
+
+  # Set the initial return value to failure
+  false
+
+  while [ $? -ne 0 -a ${RETRY_COUNT} -lt ${MAX_RETRIES} ];do
+    RETRY_COUNT=$((${RETRY_COUNT}+1))
+    ${RSYNC} -e "${RSSH}" -${RSYNC_FLAGS} --progress \
+                                          --exclude-from="${EXCLUDE_FILE}" \
+                                          --exclude "${SSHAUTHKEYFILE}" \
+                                          $CODE root@${TIP}:$MOUNTPOINT/code
+    echo "Copying code directory. Resting for a few seconds..."
+    sleep 2
+  done
+
+  if [ ${RETRY_COUNT} -ge ${MAX_RETRIES} ];then
+    EXIT_ERROR "Hit maximum number of retries, giving up."
+  fi
+
+  unset MAX_RETRIES
+  set -e
+}
 
 
 function RUNMAINPROCESS() {
@@ -550,6 +580,7 @@ function RUNMAINPROCESS() {
   RUNRSYNCCOMMANDLOGS
   RUNRSYNCCOMMANDPACKAGES
   RUNRSYNCCOMMANDSYSTEMP
+  RUNRSYNCCOMMANDCODE
   RUNRSYNCCOMMANDTEMP
 
   echo -e "\033[1;36mNow performing Final Sweep\033[0m"
@@ -560,6 +591,7 @@ function RUNMAINPROCESS() {
   RUNRSYNCCOMMANDLOGS
   RUNRSYNCCOMMANDPACKAGES
   RUNRSYNCCOMMANDSYSTEMP
+  RUNRSYNCCOMMANDCODE
   RUNRSYNCCOMMANDTEMP
 }
 
@@ -641,6 +673,7 @@ GETJDBC
 GETLOGS
 GETPACKAGES
 GETSYSTEMP
+GETCODE
 GETTEMP
 GETORGNAME
 
