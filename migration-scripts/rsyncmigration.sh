@@ -112,11 +112,11 @@ function ALLDONE() {
 
 function GETORGNAME() {
   echo -e "
-Here you Must Specify the \033[1;33mTarget\033[0m mount point.  This is
-\033[1;33mA MOUNT\033[0m Point. Under normal circumstances this drive
-would be \"/datastore/clients/ORGNAME/apps/integrate/ORGNAME1/assets\" . Remember, there is no way to check that the
-directory or drive exists. This means we are relying on \033[1;33mYOU\033[0m to
-type correctly.
+Here you Must Specify the \033[1;33mTarget\033[0m mount point.  
+This is \033[1;33mA MOUNT\033[0m Point. 
+Under normal circumstances this drive would be \"/datastore/clients/ORGNAME/apps/integrate/ORGNAME1/assets\". 
+Remember, there is no way to check that the directory or drive exists. 
+This means we are relying on \033[1;33mYOU\033[0m to type correctly.
 "
   read -p "Please specify your organization name. This was set during the Cloudformation setup: " ORGNAME
   echo "Please verify that /datastore/clients/${ORGNAME}/apps/integrate/${ORGNAME}1/assets exists..."
@@ -575,23 +575,24 @@ function RUNMAINPROCESS() {
   RSSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
   RSSH="ssh -i ${SSH_KEY_TEMP} ${RSSH_OPTIONS}"
 
+  RUNRSYNCCOMMANDCODE
   RUNRSYNCCOMMANDDATA
   RUNRSYNCCOMMANDJDBC
   RUNRSYNCCOMMANDLOGS
   RUNRSYNCCOMMANDPACKAGES
   RUNRSYNCCOMMANDSYSTEMP
-  RUNRSYNCCOMMANDCODE
   RUNRSYNCCOMMANDTEMP
 
   echo -e "\033[1;36mNow performing Final Sweep\033[0m"
 
   RSYNC_FLAGS="${RSYNC_FLAGS} --checksum"
+  
+  RUNRSYNCCOMMANDCODE
   RUNRSYNCCOMMANDDATA
   RUNRSYNCCOMMANDJDBC
   RUNRSYNCCOMMANDLOGS
   RUNRSYNCCOMMANDPACKAGES
   RUNRSYNCCOMMANDSYSTEMP
-  RUNRSYNCCOMMANDCODE
   RUNRSYNCCOMMANDTEMP
 }
 
@@ -668,12 +669,12 @@ sleep 1
 GETTIP
 
 # Allow the user to specify the source directories of the assets and the destination
+GETCODE
 GETDATA
 GETJDBC
 GETLOGS
 GETPACKAGES
 GETSYSTEMP
-GETCODE
 GETTEMP
 GETORGNAME
 
