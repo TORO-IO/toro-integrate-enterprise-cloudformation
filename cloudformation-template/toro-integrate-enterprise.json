@@ -4561,7 +4561,7 @@
             "Default": "20",
             "Description": "The size of the database (Gb)",
             "Type": "Number",
-            "MinValue": "30",
+            "MinValue": "20",
             "MaxValue": "1024",
             "ConstraintDescription": "must be between 5 and 1024Gb."
         },
