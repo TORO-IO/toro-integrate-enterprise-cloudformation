@@ -2014,7 +2014,9 @@
                         "notification_email": {
                             "Ref": "MonitoringEmail"
                         },
-                        "region": "us-east-1"
+                        "region": {
+                            "Ref": "AWS::Region"
+                        },
                     },
                     "application": {
                         "organization": {
@@ -2227,7 +2229,14 @@
         "t1bSubnet": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "us-east-1b",
+                "AvailabilityZone" : {
+                    "Fn::Select" : [
+                        "0",
+                        {
+                          "Fn::GetAZs" : ""
+                        }
+                      ]
+                    },
                 "CidrBlock": {
                     "Ref": "T1BCidrBlock"
                 },
@@ -2245,7 +2254,14 @@
         "t1cSubnet": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "us-east-1c",
+                "AvailabilityZone" : {
+                    "Fn::Select" : [
+                        "1",
+                        {
+                          "Fn::GetAZs" : ""
+                        }
+                      ]
+                    },
                 "CidrBlock": {
                     "Ref": "T1CCidrBlock"
                 },
@@ -2263,7 +2279,14 @@
         "t2bSubnet": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "us-east-1b",
+                "AvailabilityZone" : {
+                  "Fn::Select" : [
+                      "1",
+                      {
+                        "Fn::GetAZs" : ""
+                      }
+                    ]
+                  },
                 "CidrBlock": {
                     "Ref": "T2BCidrBlock"
                 },
@@ -2281,7 +2304,14 @@
         "t2cSubnet": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "us-east-1c",
+                "AvailabilityZone" : {
+                  "Fn::Select" : [
+                      "0",
+                      {
+                        "Fn::GetAZs" : ""
+                      }
+                    ]
+                  },
                 "CidrBlock": {
                     "Ref": "T2CCidrBlock"
                 },
@@ -2717,7 +2747,9 @@
                         "notification_email": {
                             "Ref": "MonitoringEmail"
                         },
-                        "region": "us-east-1"
+                        "region": {
+                            "Ref": "AWS::Region"
+                        },
                     },
                     "application": {
                         "organization": {
@@ -3094,7 +3126,14 @@
         "t3bSubnet": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "us-east-1b",
+                  "AvailabilityZone" : {
+                    "Fn::Select" : [
+                        "0",
+                        {
+                          "Fn::GetAZs" : ""
+                        }
+                      ]
+                    },
                 "CidrBlock": {
                     "Ref": "T3BCidrBlock"
                 },
@@ -3112,7 +3151,14 @@
         "t3cSubnet": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "us-east-1c",
+                "AvailabilityZone" : {
+                  "Fn::Select" : [
+                      "1",
+                      {
+                        "Fn::GetAZs" : ""
+                      }
+                    ]
+                  },
                 "CidrBlock": {
                     "Ref": "T3CCidrBlock"
                 },
@@ -4010,7 +4056,9 @@
                         "notification_email": {
                             "Ref": "MonitoringEmail"
                         },
-                        "region": "us-east-1"
+                        "region": {
+                            "Ref": "AWS::Region"
+                        },
                     },
                     "application": {
                         "organization": {
@@ -4561,7 +4609,7 @@
             "Default": "20",
             "Description": "The size of the database (Gb)",
             "Type": "Number",
-            "MinValue": "30",
+            "MinValue": "20",
             "MaxValue": "1024",
             "ConstraintDescription": "must be between 5 and 1024Gb."
         },
