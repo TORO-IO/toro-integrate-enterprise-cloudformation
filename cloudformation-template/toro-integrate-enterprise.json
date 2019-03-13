@@ -2016,7 +2016,7 @@
                         },
                         "region": {
                             "Ref": "AWS::Region"
-                        },
+                        }
                     },
                     "application": {
                         "organization": {
@@ -2749,7 +2749,7 @@
                         },
                         "region": {
                             "Ref": "AWS::Region"
-                        },
+                        }
                     },
                     "application": {
                         "organization": {
@@ -4058,7 +4058,7 @@
                         },
                         "region": {
                             "Ref": "AWS::Region"
-                        },
+                        }
                     },
                     "application": {
                         "organization": {
